@@ -28,11 +28,15 @@ def databaseOperation():
     mycursor = mydb.cursor()                #ustawiam kursor
     mycursor.execute("SELECT * FROM produkty;")     #wykonuje kwerende
     result=mycursor.fetchall()                  #zbieram wynik
-    for x in result:                        #wypisuje
+    #for x in result:                        #wypisuje
        # print(x)
     return result
 
-databaseOperation()
+#databaseOperation()
 
-#def writetofile():
+def writetofile():
+    f=open("wynik.txt","w")
+    f.write("wynik zapytania")
 
+
+writetofile()
