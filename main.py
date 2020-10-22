@@ -42,6 +42,14 @@ def addtrip():
     mycursor.execute(sql, val)                                                                      #Wykonanie kwerendy
     mydb.commit()                                                                       #Wyslanie do bazy
 
+def writetofile(result,info):
+    file=open("oferta.txt","w")                  #otwiera plik
+    file.write("Oferta spersonalizowa dla: "+info[0]+"\nWymagania klienta:\nKontynent: "+info[1]+"\t"+"Cena do: "+str(info[2])+"\tTyp wycieczki: "+info[3]+"\n")
+    file.write("Kontynent\tKraj\tMiasto\tCena\tIlosc dni\tTyp\n")
+    for x in result:  # wypisuje
+        file.write(x[0] + "\t" + x[1] + "\t" + x[2] + "\t" + str(x[3]) + "\t" + str(x[4]) + "\t" + x[5]+"\n")
+    file.close()
+
 def searchtrip(info):
     sql="SELECT kontynent, kraj, miasto, cena, dni, typ FROM wycieczki WHERE kontynent=%s AND cena<=%s AND typ=%s" #kwerenda wybierajaca po kryteriach
     val=(info[1],info[2],info[3])                                                                                   #wartosci do porownania
@@ -54,13 +62,12 @@ def searchtrip(info):
         print("Kontynent\tKraj\tMiasto\tCena\tIlosc dni\tTyp")
         for x in result:                        #wypisuje
             print(x[0]+"\t"+x[1]+"\t"+x[2]+"\t"+str(x[3])+"\t"+str(x[4])+"\t"+x[5])
-    return result
+        writetofile(result,info)
 
-def writetofile(result):
-    f=open("wynik.txt","a")
-    f.write(str(result)+"\n")
+
+
 
 client_data=list(take_data())
 queryresult=searchtrip(client_data)
-#writetofile(queryresult)
+
 #addtrip()
