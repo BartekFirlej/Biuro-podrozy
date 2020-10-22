@@ -65,9 +65,9 @@ def searchtrip(info):
         writetofile(result,info)
 
 
-
-
-client_data=list(take_data())
-queryresult=searchtrip(client_data)
-
-#addtrip()
+x=int(input("Witaj w aplikacji biura podróży Bartek\n1 - Aby zapoznac sie z oferta \n2 - Aby dodac oferte wycieczki\n"))
+if x==1:
+    client_data=list(take_data())
+    queryresult=searchtrip(client_data)
+else:
+    addtrip()
