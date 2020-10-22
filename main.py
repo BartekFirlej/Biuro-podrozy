@@ -44,11 +44,18 @@ def addtrip():
 
 def writetofile(result,info):
     file=open("oferta.txt","w")                  #otwiera plik
-    file.write("Oferta spersonalizowa dla: "+info[0]+"\nWymagania klienta:\nKontynent: "+info[1]+"\t"+"Cena do: "+str(info[2])+"\tTyp wycieczki: "+info[3]+"\n")
-    file.write("Kontynent\tKraj\tMiasto\tCena\tIlosc dni\tTyp\n")
+    file.write("Oferta spersonalizowa dla: "+info[0]+"\nWymagania klienta:\nKontynent: "+info[1]+"\t"+"Cena do: "+str(info[2])+"\tTyp wycieczki: "+info[3]+"\n")  #wpisuje do pliku wymagania
+    file.write("Kontynent\tKraj\tMiasto\tCena\tIlosc dni\tTyp\n")   #tworzy nazwy kolumn tabeli
     for x in result:  # wypisuje
-        file.write(x[0] + "\t" + x[1] + "\t" + x[2] + "\t" + str(x[3]) + "\t" + str(x[4]) + "\t" + x[5]+"\n")
-    file.close()
+        file.write(x[0] + "\t" + x[1] + "\t" + x[2] + "\t" + str(x[3]) + "\t" + str(x[4]) + "\t" + x[5]+"\n")   #wpisuje kolejne wiersze
+    file.close()    #zamykam plik
+
+def writewholetofile(result):
+    file = open("oferta.txt", "w")  #otwieram plik
+    file.write("Kontynent\tKraj\tMiasto\tCena\tIlosc dni\tTyp\n")   #wypisuje nazwy kolumn
+    for x in result:  # wypisuje
+        file.write(x[0] + "\t" + x[1] + "\t" + x[2] + "\t" + str(x[3]) + "\t" + str(x[4]) + "\t" + x[5] + "\n")#wypisuje kolejne wiersze
+    file.close()#zamykam plik
 
 def searchtrip(info):
     sql="SELECT kontynent, kraj, miasto, cena, dni, typ FROM wycieczki WHERE kontynent=%s AND cena<=%s AND typ=%s" #kwerenda wybierajaca po kryteriach
@@ -59,15 +66,31 @@ def searchtrip(info):
         print("Przykro nam, "+info[0]+"\nW tym momencie nie mamy w ofercie wycieczek spełniających Twoje kryteria")
     else:   #w innym wypadku wypisuje wynik w tabelce
         print(info[0]+" znalezlismy dla Ciebie "+str(len(result))+" ofert. Zapoznaj się z nimi:\n")
-        print("Kontynent\tKraj\tMiasto\tCena\tIlosc dni\tTyp")
+        print("Kontynent\tKraj\tMiasto\tCena\tIlosc dni\tTyp")  #wypisuje nazwy kolumn
         for x in result:                        #wypisuje
             print(x[0]+"\t"+x[1]+"\t"+x[2]+"\t"+str(x[3])+"\t"+str(x[4])+"\t"+x[5])
-        writetofile(result,info)
+        writetofile(result,info)    #wpisuje wynik do pliku
+        print("\nZapisalismy je również do pliku dla Ciebie")
 
+def printtrip():
+    sql = "SELECT kontynent, kraj, miasto, cena, dni, typ FROM wycieczki"
+    mycursor.execute(sql)  # wykonuje kwerende
+    result = mycursor.fetchall()  # zbieram wynik
+    print("Znalezlismy dla Ciebie " + str(len(result)) + " ofert. Zapoznaj się z nimi:\n")
+    print("Kontynent\tKraj\tMiasto\tCena\tIlosc dni\tTyp")
+    for x in result:  # wypisuje
+        print(x[0] + "\t" + x[1] + "\t" + x[2] + "\t" + str(x[3]) + "\t" + str(x[4]) + "\t" + x[5])
+    writewholetofile(result)
+    print("\nZapisalismy je również do pliku dla Ciebie")
 
-x=int(input("Witaj w aplikacji biura podróży Bartek\n1 - Aby zapoznac sie z oferta \n2 - Aby dodac oferte wycieczki\n"))
+x=int(input("Witaj w aplikacji biura podróży Bartek\n1 - Aby zapoznac sie z pelna oferta \n2 - Aby zapoznac sie ze spersonalizowana oferta \n3 - Aby dodac oferte wycieczki\n"))
+while x not in range(1,4):  #jezeli uzytkownik poda x rozne od 1,2,3 to go poprosi jeszcze raz
+    x = int(input(
+        "Witaj w aplikacji biura podróży Bartek\n1 - Aby zapoznac sie z pelna oferta \n2 - Aby zapoznac sie ze spersonalizowana oferta \n3 - Aby dodac oferte wycieczki\n"))
 if x==1:
-    client_data=list(take_data())
-    queryresult=searchtrip(client_data)
+    printtrip()
+elif x==2:
+    client_data = list(take_data())
+    queryresult = searchtrip(client_data)
 else:
     addtrip()
